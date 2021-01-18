@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,9 @@ export class AppComponent implements OnInit {
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.fetchPosts();
+  }
 
   onCreatePost(postData: { title: string; content: string }) {
     // Send Http request
@@ -25,9 +28,30 @@ export class AppComponent implements OnInit {
 
   onFetchPosts() {
     // Send Http request
+    this.fetchPosts();
   }
 
   onClearPosts() {
     // Send Http request
   }
+
+  private fetchPosts() {
+    this.http
+      .get('https://ng-complete-guide-e532a-default-rtdb.firebaseio.com/posts.json')
+      .pipe(
+        map(responseData => {
+          const postsArray = [];
+          for (const key in responseData) {
+            if (responseData.hasOwnProperty(key)) {
+            postsArray.push({ ...responseData[key], id: key })
+            } //end if
+          } //end for
+          return postsArray;
+        }) //end map
+      ) //end pipe
+      .subscribe(posts => {
+        console.log(posts);
+      });
+  }
+
 }
