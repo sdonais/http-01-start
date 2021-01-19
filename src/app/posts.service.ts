@@ -18,20 +18,25 @@ export class PostsService {
               console.log(responseData); 
             });
     }
-}
 
-fetchPosts() {
-    return this.http
-      .get<{ [key: string]: Post }>('https://ng-complete-guide-e532a-default-rtdb.firebaseio.com/posts.json')//ng now understands responseData will have this format
-      .pipe(
-        map(responseData => {
-          const postsArray: Post[] = [];
-          for (const key in responseData) {
-            if (responseData.hasOwnProperty(key)) {
-            postsArray.push({ ...responseData[key], id: key })
-            } //end if
-          } //end for
-          return postsArray;
+    fetchPosts() {
+        return this.http
+        .get<{ [key: string]: Post }>('https://ng-complete-guide-e532a-default-rtdb.firebaseio.com/posts.json')//ng now understands responseData will have this format
+        .pipe(
+            map(responseData => {
+            const postsArray: Post[] = [];
+            for (const key in responseData) {
+                if (responseData.hasOwnProperty(key)) {
+                postsArray.push({ ...responseData[key], id: key })
+                } //end if
+            } //end for
+            return postsArray;
         }) //end map
       ); //end pipe 
-}
+    } //end fetchPosts
+
+    
+
+
+
+}//end class
