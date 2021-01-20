@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Post } from "./post.model";
 import { map, catchError } from 'rxjs/operators'
@@ -15,8 +15,7 @@ export class PostsService {
     createAndStorePost(title: string, content: string) {
         const postData: Post = {title: title, content: content}
         this.http.post<{ name: string }>( //recommended to let it know what type of data it is
-            'https://ng-complete-guide-e532a-default-rtdb.firebaseio.com/posts.json',
-            postData
+            'https://ng-complete-guide-e532a-default-rtdb.firebaseio.com/posts.json', postData
             ).subscribe(responseData => {
               console.log(responseData); 
             }, error => {
@@ -26,7 +25,11 @@ export class PostsService {
 
     fetchPosts() {
         return this.http
-        .get<{ [key: string]: Post }>('https://ng-complete-guide-e532a-default-rtdb.firebaseio.com/posts.json')//ng now understands responseData will have this format
+        .get<{ [key: string]: Post }>(
+            'https://ng-complete-guide-e532a-default-rtdb.firebaseio.com/posts.json',
+            {
+                headers: new HttpHeaders({'Custom-Header': 'hello'})
+            })
         .pipe(
             map(responseData => {
             const postsArray: Post[] = [];
