@@ -3,7 +3,6 @@ import { Injectable } from "@angular/core";
 import { Post } from "./post.model";
 import { map, catchError, tap } from 'rxjs/operators'
 import { Subject, throwError } from "rxjs";
-import { cachedDataVersionTag } from "v8";
 
 @Injectable({providedIn: 'root'})
 
@@ -41,6 +40,7 @@ export class PostsService {
             {
                 headers: new HttpHeaders({'Custom-Header': 'hello'}),
                 params: new HttpParams().set('print', 'pretty'),
+                responseType: 'json',
                 //params: searchParams
             })
         .pipe(
@@ -64,7 +64,8 @@ export class PostsService {
         return this.http.delete(
             'https://ng-complete-guide-e532a-default-rtdb.firebaseio.com/posts.json',
             {
-                observe: 'events'
+                observe: 'events',
+                //responseType: 'blob' // omg  
             }
         ).pipe(tap(event => {
             console.log(event);
